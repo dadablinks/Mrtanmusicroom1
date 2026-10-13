@@ -801,6 +801,74 @@ button{font:inherit}
 .partDoubleHit i{width:7px;height:7px;background:#b48a43}
 .partBeat.active .partHit,.partBeat.active .partDoubleHit i{background:#fff}
 @media(max-width:760px){.partBeat{min-height:42px}.partPatternNote{font-size:10px}}
+
+/* Responsive xylophone bars: keep every note inside the practice card on phones and tablets. */
+#practice .toolCard.xylophonePractice{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  grid-template-areas:"head" "visual" "counter" "beats" "controls" "lyrics" "check";
+  gap:10px;
+  width:100%;
+  min-width:0;
+  overflow:hidden;
+}
+#practice .toolCard.xylophonePractice .toolHead{grid-area:head;min-width:0;width:100%}
+#practice .toolCard.xylophonePractice .visualStage{
+  grid-area:visual;
+  width:100%;
+  min-width:0;
+  min-height:clamp(250px,64vw,360px);
+  padding:clamp(12px,4vw,24px);
+  overflow:hidden;
+  box-sizing:border-box;
+}
+#practice .toolCard.xylophonePractice .instrumentVisual{
+  width:100%;
+  max-width:760px;
+  min-width:0;
+  margin:0 auto;
+  transform:none;
+  text-align:center;
+}
+#practice .toolCard.xylophonePractice .xylophoneChordLabel{
+  display:block;
+  width:100%;
+  max-width:100%;
+  font-size:clamp(18px,5.5vw,34px);
+  line-height:1.1;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  text-align:center;
+}
+#practice .toolCard.xylophonePractice .xylophoneChordNotes,
+#practice .toolCard.xylophonePractice .xylophonePracticeType{
+  max-width:100%;
+  overflow-wrap:anywhere;
+}
+#practice .toolCard.xylophonePractice .xylo{
+  display:grid;
+  grid-template-columns:repeat(8,minmax(0,1fr));
+  width:100%;
+  max-width:760px;
+  min-width:0;
+  margin:0 auto;
+  gap:clamp(2px,1.3vw,8px);
+  overflow:visible;
+}
+#practice .toolCard.xylophonePractice .xbar{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  height:clamp(100px,32vw,210px)!important;
+  padding:8px 1px 10px;
+  font-size:clamp(11px,3.2vw,18px);
+  border-radius:6px 6px 3px 3px;
+}
+#practice .toolCard.xylophonePractice #barCounter{grid-area:counter;width:100%;min-width:0}
+#practice .toolCard.xylophonePractice #beats{grid-area:beats;width:100%;min-width:0}
+#practice .toolCard.xylophonePractice .controls{grid-area:controls;min-width:0}
+#practice .toolCard.xylophonePractice .lyricsPanel{grid-area:lyrics;min-width:0;width:100%}
+#practice .toolCard.xylophonePractice .checkPanel{grid-area:check;min-width:0;width:100%}
 </style>
 </head>
 <body>
