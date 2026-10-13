@@ -743,6 +743,36 @@ button{font:inherit}
   #practice .toolHead h2{font-size:34px}
   #practice .toolHead p{margin:4px 0 0}
   #practice .instrumentVisual{transform:scale(.86);transform-origin:center}
+
+/* Keep the keyboard/xylophone graphic in its own full-width row. */
+#practice .toolCard.keyboardPractice {
+  grid-template-columns:minmax(0,1fr);
+  grid-template-areas:"head" "visual" "counter" "beats" "controls" "lyrics" "check";
+}
+#practice .toolCard.keyboardPractice .visualStage {
+  min-height:320px;
+  width:100%;
+  box-sizing:border-box;
+}
+#practice .toolCard.keyboardPractice .instrumentVisual {
+  width:min(100%,760px);
+  transform:none;
+}
+#practice .toolCard.keyboardPractice .xylo {
+  display:grid;
+  grid-template-columns:repeat(8,minmax(0,1fr));
+  width:min(100%,760px);
+  max-width:100%;
+  margin:0 auto;
+  gap:clamp(4px,1vw,8px);
+}
+#practice .toolCard.keyboardPractice .xbar {
+  width:auto;
+  min-width:0;
+  height:clamp(110px,19vw,210px)!important;
+  padding:8px 2px 10px;
+  font-size:clamp(14px,1.4vw,18px);
+}
 }
 @media(max-width:899px){#practiceLyrics{grid-template-columns:1fr}.practiceLyricLine{font-size:20px}}
 
@@ -1247,6 +1277,8 @@ function openInstrument(name){
 
 function startPractice(){
   if(!level) return;
+  const toolCard=document.querySelector("#practice .toolCard");
+  if(toolCard) toolCard.classList.toggle("keyboardPractice", instrument==="Keyboard / Xylophone");
   practiceBar=0;
   practiceBeat=0;
   practicePlaying=false;
