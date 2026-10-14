@@ -979,9 +979,9 @@ button{font:inherit}
       <div class="midiCard">
         <div>
           <strong>MIDI Play-Along</strong>
-          <span id="midiStatus">Waiting for MIDI file</span>
+          <span id="midiStatus">Melody MIDI ready to load</span>
         </div>
-        <button id="midiPlayBtn" disabled>▶ Play MIDI</button>
+        <button id="midiPlayBtn" type="button" onclick="toggleStarterMidi()">▶ Play Melody</button>
       </div>
     </div>
   </section>
@@ -1454,6 +1454,7 @@ function closeDessertChallenge(){
 }
 
 function show(id){
+  if(id!=="song")stopStarterMidi();
   stopPracticeTimer();
   if(id!=="playalong"){stopPlayAlongTimer();playAlongPlaying=false;}
   if(countInTimer){clearInterval(countInTimer);countInTimer=null;const o=document.getElementById("countInOverlay");if(o){o.classList.remove("show");o.setAttribute("aria-hidden","true");}}
@@ -1931,6 +1932,53 @@ async function loadMasterMidi(){
 }
 let masterMidiError=false;
 loadMasterMidi().catch(e=>{masterMidiError=true;console.warn("MIDI playback unavailable",e);});
+// Starter uses track 1 of the same embedded master MIDI. No extra MIDI file is required.
+let starterMidiTimer=null,starterMidiBeat=0,starterMidiPlaying=false;
+function starterMidiStatus(message){const e=document.getElementById("midiStatus");if(e)e.textContent=message;}
+function stopStarterMidi(){
+  if(starterMidiTimer){clearInterval(starterMidiTimer);starterMidiTimer=null;}
+  starterMidiPlaying=false;starterMidiBeat=0;
+  const b=document.getElementById("midiPlayBtn");if(b)b.textContent="▶ Play Melody";
+}
+function starterMidiBeatSound(beat){
+  if(!practiceAudioContext||!masterMidiParts)return;
+  const beatSeconds=60/100,now=practiceAudioContext.currentTime;
+  for(const evt of masterMidiParts[1]||[]){
+    if(evt.beat<beat-.0001||evt.beat>=beat+1-.0001)continue;
+    const at=now+Math.max(0,evt.beat-beat)*beatSeconds;
+    const osc=practiceAudioContext.createOscillator(),gain=practiceAudioContext.createGain();
+    osc.type="sine";
+    osc.frequency.setValueAtTime(440*Math.pow(2,(evt.note-69)/12),at);
+    gain.gain.setValueAtTime(0,at);
+    gain.gain.linearRampToValueAtTime((evt.vel/127)*.15,at+.008);
+    gain.gain.exponentialRampToValueAtTime(.0001,at+.38);
+    osc.connect(gain);gain.connect(practiceAudioContext.destination);
+    osc.start(at);osc.stop(at+.4);
+  }
+}
+async function toggleStarterMidi(){
+  if(starterMidiPlaying){stopStarterMidi();starterMidiStatus("Paused. Press Play Melody to restart.");return;}
+  const button=document.getElementById("midiPlayBtn");
+  if(button)button.disabled=true;
+  starterMidiStatus("Loading embedded MIDI...");
+  try{
+    const tracks=await loadMasterMidi();
+    if(!tracks[1]||!tracks[1].length)throw Error("Melody track is empty");
+    ensurePracticeAudio();
+    if(practiceAudioContext.state==="suspended")await practiceAudioContext.resume();
+    starterMidiPlaying=true;starterMidiBeat=0;
+    const last=Math.max(...tracks[1].map(n=>n.beat))+1;
+    if(button)button.textContent="■ Stop Melody";
+    starterMidiStatus("Playing Bunga Sayang melody");
+    starterMidiBeatSound(starterMidiBeat);
+    starterMidiTimer=setInterval(()=>{
+      starterMidiBeat++;
+      if(starterMidiBeat>last){stopStarterMidi();starterMidiStatus("Melody finished");return;}
+      starterMidiBeatSound(starterMidiBeat);
+    },600);
+  }catch(err){stopStarterMidi();starterMidiStatus("MIDI unavailable: "+err.message);console.error(err);}
+  finally{if(button)button.disabled=false;}
+}
 function playMasterMidiBeat(){
   if(!masterMidiParts||!practiceAudioContext)return;
   const absoluteBeat=playAlongBarIndex*4+playAlongBeat;
