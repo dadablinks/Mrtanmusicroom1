@@ -869,6 +869,22 @@ button{font:inherit}
 #practice .toolCard.xylophonePractice .controls{grid-area:controls;min-width:0}
 #practice .toolCard.xylophonePractice .lyricsPanel{grid-area:lyrics;min-width:0;width:100%}
 #practice .toolCard.xylophonePractice .checkPanel{grid-area:check;min-width:0;width:100%}
+
+/* Main Dishes and Play-Along: independently scrollable song sheet */
+#practiceLyrics, #playAlongLyrics {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: clamp(200px, 34vh, 360px);
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  min-width: 0;
+  scroll-behavior: auto;
+}
+#practiceLyrics { border-top: 1px solid #eadcc0; }
+.playAlongScore { min-width: 0; }
+@media (max-width: 600px) {
+  #practiceLyrics, #playAlongLyrics { max-height: min(35vh, 290px); }
+}
 </style>
 </head>
 <body>
@@ -1264,6 +1280,17 @@ function renderPracticeLyrics(){
   });
   updatePracticeChordHighlight();
 }
+function scrollLyricsOnly(containerId, activeEl){
+  const panel=document.getElementById(containerId);
+  if(!panel || !activeEl || !panel.contains(activeEl)) return;
+  const box=panel.getBoundingClientRect();
+  const target=activeEl.getBoundingClientRect();
+  const padding=24;
+  if(target.top<box.top+padding || target.bottom>box.bottom-padding){
+    const offset=(target.top+target.bottom-box.top-box.bottom)/2;
+    panel.scrollTop += offset;
+  }
+}
 function updatePracticeChordHighlight(){
   practiceChordElements.forEach((el,i)=>{
     const active=i===practiceBar;
@@ -1274,7 +1301,7 @@ function updatePracticeChordHighlight(){
   const activeEl=practiceChordElements[practiceBar];
   if(activeEl && practicePlaying){
     const r=activeEl.getBoundingClientRect();
-    if(r.top<120 || r.bottom>window.innerHeight-120) activeEl.scrollIntoView({block:"center",behavior:"smooth"});
+    scrollLyricsOnly("practiceLyrics",activeEl);
   }
 }
 
@@ -1783,9 +1810,7 @@ function updatePlayAlongUI(){
   const activeEl=playAlongChordElements[playAlongBarIndex];
   if(activeEl && playAlongPlaying){
     const r=activeEl.getBoundingClientRect();
-    if(r.top<120 || r.bottom>window.innerHeight-120){
-      activeEl.scrollIntoView({block:"center",behavior:"smooth"});
-    }
+    scrollLyricsOnly("playAlongLyrics",activeEl);
   }
 }
 
