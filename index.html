@@ -1932,24 +1932,24 @@ async function loadMasterMidi(){
 let masterMidiError=false;
 loadMasterMidi().catch(e=>{masterMidiError=true;console.warn("MIDI playback unavailable",e);});
 function playMasterMidiBeat(){
-  if(!masterMidiParts||!practiceAudioCtx)return;
+  if(!masterMidiParts||!practiceAudioContext)return;
   const absoluteBeat=playAlongBarIndex*4+playAlongBeat;
   const selected=[document.getElementById("ensembleMelody")?.checked?1:0,1+ensembleLevels.uke,4+ensembleLevels.xylo,7+ensembleLevels.perc].filter(Boolean);
   const beatSeconds=60/playAlongTempo;
-  const now=practiceAudioCtx.currentTime;
+  const now=practiceAudioContext.currentTime;
   for(const track of selected){
     const percussion=track>=8;
     for(const evt of masterMidiParts[track]||[]){
       if(evt.beat<absoluteBeat-.0001||evt.beat>=absoluteBeat+1-.0001)continue;
       const offset=Math.max(0,(evt.beat-absoluteBeat)*beatSeconds);
       const at=now+offset;
-      const osc=practiceAudioCtx.createOscillator(),gain=practiceAudioCtx.createGain();
+      const osc=practiceAudioContext.createOscillator(),gain=practiceAudioContext.createGain();
       osc.type=percussion?"triangle":(track>=5?"sine":"triangle");
       osc.frequency.setValueAtTime(percussion?(evt.note===45?120:195):440*Math.pow(2,(evt.note-69)/12),at);
       gain.gain.setValueAtTime(0,at);
       gain.gain.linearRampToValueAtTime((evt.vel/127)*(percussion?.075:.10),at+.006);
       gain.gain.exponentialRampToValueAtTime(.0001,at+Math.min(beatSeconds*.85,percussion?.10:.30));
-      osc.connect(gain);gain.connect(practiceAudioCtx.destination);osc.start(at);osc.stop(at+Math.min(beatSeconds*.9,percussion?.12:.32));
+      osc.connect(gain);gain.connect(practiceAudioContext.destination);osc.start(at);osc.stop(at+Math.min(beatSeconds*.9,percussion?.12:.32));
     }
   }
 }
