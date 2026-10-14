@@ -929,6 +929,14 @@ button{font:inherit}
 .starterLyricsCard h3{color:var(--burg);margin:0 0 8px}.starterLyricsCard p{color:var(--muted);font:650 14px/1.5 system-ui,sans-serif}
 .starterLyrics{max-height:360px;overflow-y:auto;overscroll-behavior:contain;padding:12px 18px;border-radius:10px;background:#fffdf8}
 .starterLyrics h4{color:var(--burg);margin:18px 0 8px}.starterLyrics p{margin:0 0 7px;font:650 17px/1.65 system-ui,sans-serif;color:var(--ink)}
+
+/* Percussion Level 3: keep every three-hit fill inside a single beat cell. */
+.percussionBarBeats{min-width:0}
+.percussionBarBeat{min-width:0;overflow:hidden;padding:7px 3px}
+.percussionBarBeat .rhythmIconRow{width:100%;min-width:0;gap:4px}
+.percussionBarBeat .fillIcon{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;width:100%;max-width:63px;align-items:center;justify-items:center}
+.percussionBarBeat .fillIcon span,.percussionBarBeat .fillIcon span:nth-child(n){width:100%;height:auto;aspect-ratio:1;border-radius:50%;max-width:19px}
+@media(max-width:760px){.percussionBarBeat .fillIcon{max-width:48px;gap:2px}.percussionBarBeat{padding:5px 2px}}
 </style>
 </head>
 <body>
