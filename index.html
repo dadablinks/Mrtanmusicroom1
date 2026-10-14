@@ -1065,12 +1065,8 @@ button{font:inherit}
       <div class="playAlongArrangement">
         <section class="playAlongBandPanel">
           <h4>Band Parts</h4>
-          <div class="playAlongLevelControls" aria-label="Choose difficulty for each instrument">
-            <label>Ukulele <select id="playAlongUkeLevel" onchange="setPlayAlongLevel('ukulele',this.value)"><option value="1">Level 1</option><option value="2">Level 2</option><option value="3">Level 3</option></select></label>
-            <label>Xylophone <select id="playAlongXyloLevel" onchange="setPlayAlongLevel('xylophone',this.value)"><option value="1">Level 1</option><option value="2">Level 2</option><option value="3">Level 3</option></select></label>
-            <label>Percussion <select id="playAlongPercLevel" onchange="setPlayAlongLevel('percussion',this.value)"><option value="1">Level 1</option><option value="2">Level 2</option><option value="3">Level 3</option></select></label>
-          </div>
-          <div class="playAlongLevelBar" aria-label="Choose a playing level for each instrument"><label>Ukulele <select id="ensembleUkeLevel" onchange="setEnsembleLevel('uke',this.value)"><option value="1">Level 1</option><option value="2" selected>Level 2</option><option value="3">Level 3</option></select></label><label>Xylophone <select id="ensembleXyloLevel" onchange="setEnsembleLevel('xylo',this.value)"><option value="1">Level 1</option><option value="2">Level 2</option><option value="3" selected>Level 3</option></select></label><label>Percussion <select id="ensemblePercLevel" onchange="setEnsembleLevel('perc',this.value)"><option value="1">Level 1</option><option value="2" selected>Level 2</option><option value="3">Level 3</option></select></label></div><p class="playAlongMidiNote">Each instrument follows the chosen playing level. MIDI track playback is enabled when the master MIDI is loaded.</p><div id="playAlongEnsemble" class="playAlongEnsemble"></div>
+          
+          <div class="playAlongLevelBar" aria-label="Choose a playing level for each instrument"><label>Ukulele <select id="ensembleUkeLevel" onchange="setEnsembleLevel('uke',this.value)"><option value="1">Level 1</option><option value="2" selected>Level 2</option><option value="3">Level 3</option></select></label><label>Xylophone <select id="ensembleXyloLevel" onchange="setEnsembleLevel('xylo',this.value)"><option value="1">Level 1</option><option value="2">Level 2</option><option value="3" selected>Level 3</option></select></label><label>Percussion <select id="ensemblePercLevel" onchange="setEnsembleLevel('perc',this.value)"><option value="1">Level 1</option><option value="2" selected>Level 2</option><option value="3">Level 3</option></select></label></div><p class="playAlongMidiNote">Each instrument follows the chosen playing level. Master MIDI included. Select the levels to hear their corresponding MIDI parts. <label><input id="ensembleMelody" type="checkbox" checked> Melody</label></p><div id="playAlongEnsemble" class="playAlongEnsemble"></div>
         </section>
         <section class="playAlongScore">
           <h4>Chorded Lyrics</h4>
@@ -1897,8 +1893,69 @@ function updatePlayAlongUI(){
   }
 }
 
+
+// Embedded user-supplied 11-track Bunga Sayang MIDI, compressed without losing data.
+const masterMidiPacked="eNrtWk1PGmEQHhXbJq21vXnck0kPplYlhEjIbsmGLYGkTW1j0wMaS9RIgGg08eaCrGk8IFBN7K3/o4d+J/0NvfQ/9AdsZ4AsL7AIq2wpOIclwzzP+8y8HzMbyBtb2ngDADdgBG6P/I4tbW/htwdgjt15vJtaX5Wer+6vptbBfDWKfnPZ4xmdugXms7GbHyQwH0J1wNgefHoCpmf8ZXpzLaFnTrS4njnQAE7CZITRsDwqGaoIyWTIIhSKF+AgBL0UCpErZDtMYLflaCSkkZAd1pzjBZwICUVguNdImC0aETSiZERFT2vWAlQROpIxWm6lEk0jQ6sIHck1ITQiRFIIUypKaITrGA1Do6KkEqaKJEvSYgsc9DQI1Rbp4pRiZMSIFCWsmiUakTpmsZFkYZaSQpjSmBIaDSnVFie3Uq++InyewuqbeLG1m0wkE1J0Lyk9KkBxNg7FBXx8+ARwmD4LoC/g48MnAA4I/maCv1uCVwS93QCUzCI+QQIokUV8gtCT+dRThaJMBCFVXe6G4DTtXmTtQkyep1vzFApz4g98aSnMuQKUUKKEEiWUKw+LMokUWJLEpkMfh1I/ibCf7rRfCKoHdwAdporJlSkADaZKyZbLCXABcPF08fisf9g83n2sf7OZQ9gveT65P3k+tz+PdT+Ol3fxO+tvz0my9AGSXKKFFGiTJJ5FAihxI5lMhhjCaCnrkqoWOIqxP6m6S/meC3JQg5XJLQMcTVCf1J0iuCXlsA4zoE2ko5B9wLTocLm0mZmknlYGEzyQUbAIzhEGgr1QBwL+BewL3gvylHrsbe5cBniJsl9yHuQ9yH+AxxH+Iz5NoZEv5wGQnDNwDTM7m8n0xnNtIp6xrMOxp4GIBjSbDoqs+h2tmi20KHYXgvXUKlNva401g7Xl/0hOUc9cF3m+WcK8BpIA6ndAkqjxuUD+FwG4+KHroDlVfRE7X3KOihm095BT2avSeEHromhaqQj+A2uBi9KdZxd7EupzOU+QjHx7MEP+j43BWPD/3/eUZHzUD+mUyGjAYpGKh5RuEMDbrj0DE2VNFD+RtRpxy6PGgotmTL0w3HypCqygijQWtlROqeAZ1854n1bl7/Mh9eH1fXx4IuyMeCOucjvulfw0/qLfeeJrbXdnd2NtOp6qsezmeQ/HYGWxNbzi1hicc/2i/xHJxPE3kayNAzzYYFtRpMZjKTmcxkN8lCD7/xq9rDJxt6uDQ/GNPSJcvAD8AvgqctNFDzcmDwfvG8+BzyvHhetVfcX962BoY=";
+let masterMidiParts=null;
+async function loadMasterMidi(){
+  if(masterMidiParts)return masterMidiParts;
+  const bytes=Uint8Array.from(atob(masterMidiPacked),c=>c.charCodeAt(0));
+  const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate"));
+  const data=new Uint8Array(await new Response(stream).arrayBuffer());
+  const view=new DataView(data.buffer);let p=0;
+  const read32=()=>{const v=view.getUint32(p);p+=4;return v;};
+  const read16=()=>{const v=view.getUint16(p);p+=2;return v;};
+  const ascii=n=>{const v=String.fromCharCode(...data.subarray(p,p+n));p+=n;return v;};
+  const vlq=()=>{let v=0,k;do{k=data[p++];v=(v<<7)|(k&127);}while(k&128);return v;};
+  if(ascii(4)!=="MThd")throw Error("Invalid master MIDI");
+  const header=read32(),type=read16(),count=read16(),ppq=read16();p=8+header;
+  const tracks=[];
+  for(let tr=0;tr<count;tr++){
+    if(ascii(4)!=="MTrk")throw Error("Invalid MIDI track");
+    const end=p+4+read32();let tick=0,running=0;const notes=[];
+    while(p<end){
+      tick+=vlq();let status=data[p];
+      if(status&128){p++;running=status;}else status=running;
+      if(status===255){p++;const len=vlq();p+=len;continue;}
+      if(status===240||status===247){p+=vlq();continue;}
+      const kind=status&240;
+      if(kind===192||kind===208){p++;continue;}
+      if(kind<128||kind>224)throw Error("Unknown MIDI event");
+      const note=data[p++],vel=data[p++];
+      if(kind===144&&vel>0)notes.push({beat:tick/ppq,note,vel});
+    }
+    p=end;tracks.push(notes);
+  }
+  masterMidiParts=tracks;
+  return tracks;
+}
+let masterMidiError=false;
+loadMasterMidi().catch(e=>{masterMidiError=true;console.warn("MIDI playback unavailable",e);});
+function playMasterMidiBeat(){
+  if(!masterMidiParts||!practiceAudioCtx)return;
+  const absoluteBeat=playAlongBarIndex*4+playAlongBeat;
+  const selected=[document.getElementById("ensembleMelody")?.checked?1:0,1+ensembleLevels.uke,4+ensembleLevels.xylo,7+ensembleLevels.perc].filter(Boolean);
+  const beatSeconds=60/playAlongTempo;
+  const now=practiceAudioCtx.currentTime;
+  for(const track of selected){
+    const percussion=track>=8;
+    for(const evt of masterMidiParts[track]||[]){
+      if(evt.beat<absoluteBeat-.0001||evt.beat>=absoluteBeat+1-.0001)continue;
+      const offset=Math.max(0,(evt.beat-absoluteBeat)*beatSeconds);
+      const at=now+offset;
+      const osc=practiceAudioCtx.createOscillator(),gain=practiceAudioCtx.createGain();
+      osc.type=percussion?"triangle":(track>=5?"sine":"triangle");
+      osc.frequency.setValueAtTime(percussion?(evt.note===45?120:195):440*Math.pow(2,(evt.note-69)/12),at);
+      gain.gain.setValueAtTime(0,at);
+      gain.gain.linearRampToValueAtTime((evt.vel/127)*(percussion?.075:.10),at+.006);
+      gain.gain.exponentialRampToValueAtTime(.0001,at+Math.min(beatSeconds*.85,percussion?.10:.30));
+      osc.connect(gain);gain.connect(practiceAudioCtx.destination);osc.start(at);osc.stop(at+Math.min(beatSeconds*.9,percussion?.12:.32));
+    }
+  }
+}
 function playAlongClick(accent=false){
   metronomeClick(accent,true);
+  playMasterMidiBeat();
 }
 
 function togglePlayAlong(){
@@ -1912,6 +1969,7 @@ function togglePlayAlong(){
   }
 
   playAlongPlaying=true;
+  loadMasterMidi().catch(console.warn);
   updatePlayAlongUI();
   playAlongClick(true);
   startPlayAlongTimer();
