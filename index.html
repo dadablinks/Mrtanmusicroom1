@@ -943,6 +943,17 @@ button{font:inherit}
 .partTripleHit i{display:block;flex:0 1 auto;width:clamp(4px,1.2vw,7px);height:clamp(4px,1.2vw,7px);border-radius:50%;background:#b48a43}
 .partBeat.active .partTripleHit i{background:#fff}
 .partBeat .percussionMark{min-width:0;width:100%;overflow:hidden}
+
+/* Show the complete Level 3 percussion phrase beside the live beat pattern. */
+.playAlongPercussionPhrase{display:grid;gap:5px;margin-top:12px;min-width:0}
+.playAlongPhraseRow{display:grid;grid-template-columns:minmax(60px,86px) minmax(0,1fr);gap:6px;align-items:center;padding:5px;border:1px solid #dfc58a;border-radius:9px;background:#fffaf0;min-width:0}
+.playAlongPhraseRow.current{border:2px solid var(--burg);background:#fff0db}
+.playAlongPhraseLabel{font:800 11px/1.25 system-ui,sans-serif;color:var(--burg);text-align:center}
+.playAlongPhraseRow .partBeatGrid{min-width:0;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.playAlongPhraseRow .partBeat{min-width:0;min-height:34px}
+.playAlongPhraseRow .partTripleHit i{width:clamp(3px,1.1vw,7px);height:clamp(3px,1.1vw,7px)}
+.playAlongPercussionPhrase p{font:650 11px/1.4 system-ui,sans-serif;color:var(--muted);margin:3px 0 0;text-align:center}
+@media(max-width:480px){.playAlongPhraseRow{grid-template-columns:58px minmax(0,1fr)}.playAlongPhraseRow .partBeat{padding:2px}.playAlongPhraseRow .partTripleHit{gap:2px}}
 </style>
 </head>
 <body>
@@ -1884,7 +1895,12 @@ function renderPlayAlongEnsemble(current){
   const perc=p===1?[dot,dot,dot,dot]:p===2?[dot,half,dot,dot]:(phraseBar===4?[dot,half,triple,triple]:[dot,half,dot,dot]);
   const beatCells=(v,kind)=>v.map((val,i)=>"<div class='partBeat "+(i===playAlongBeat?"active":"")+"' data-beat='"+i+"'><small>"+(i+1)+"</small><strong class='"+kind+"'>"+val+"</strong></div>").join("");
   const card=(label,lvl,vals,kind,note)=>"<article class='playAlongInstrument'><div class='playAlongInstrumentHead'><strong>"+label+" · Level "+lvl+"</strong><span>"+(rest?"Rest":chord)+"</span></div><div class='partBeatGrid'>"+beatCells(vals,kind)+"</div><div class='partPatternNote'>"+note+"</div></article>";
-  mount.innerHTML=card("Ukulele",u,uke,"strumMark",["Strum once at each chord change.","Down-strum every beat.","DDUDD strumming pattern."][u-1])+card("Xylophone",x,xylo,"noteMark",["Play the root note.","Play root and fifth together.","Play a four-beat arpeggio."][x-1])+card("Percussion",p,perc,"percussionMark",["Steady beat.","Simple ostinato.","Bars 1–3: 1, 2, 1, 1 hits. Bar 4: 1, 2, 3, 3 hits. Repeats every four bars."][p-1]);
+  const phrasePattern=barNo=>barNo===4?[dot,half,triple,triple]:[dot,half,dot,dot];
+  const phrasePreview=p===3?"<div class='playAlongPercussionPhrase' aria-label='Percussion Level 3 repeating four-bar phrase'>"+
+    [1,2,3,4].map(n=>"<div class='playAlongPhraseRow "+(phraseBar===n?"current":"")+"'><span class='playAlongPhraseLabel'>Bar "+n+(n===4?" · Fill":"")+"</span><div class='partBeatGrid'>"+beatCells(phrasePattern(n),"percussionMark")+"</div></div>").join("")+
+    "<p>Repeat bars 1–4 throughout the song. The outlined row is the current bar.</p></div>":"";
+
+  mount.innerHTML=card("Ukulele",u,uke,"strumMark",["Strum once at each chord change.","Down-strum every beat.","DDUDD strumming pattern."][u-1])+card("Xylophone",x,xylo,"noteMark",["Play the root note.","Play root and fifth together.","Play a four-beat arpeggio."][x-1])+card("Percussion",p,perc,"percussionMark",["Steady beat.","Simple ostinato.","Bars 1–3: 1, 2, 1, 1 hits. Bar 4: 1, 2, 3, 3 hits. Repeats every four bars."][p-1])+phrasePreview;
 }
 
 function updatePlayAlongUI(){
